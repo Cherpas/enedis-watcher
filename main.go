@@ -52,9 +52,8 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	return nil
 }
 
-func executeDecrypter(completeFileName string, decryptionKey string) (string, error) {
+func executeDecrypter(jarPath string, completeFileName string, decryptionKey string) (string, error) {
 
-	jarPath := "Decrypt.jar"
 	outputFilePath := "/tmp/" + filepath.Base(completeFileName) + "_DECRYPTED.zip"
 	// Use the exec.Command function to create a new command for executing the JAR file.
 	cmd := exec.Command("java", "-jar", jarPath, decryptionKey, completeFileName, outputFilePath)
@@ -178,10 +177,7 @@ func uploadFolderContent(folderPath string) error {
 
 func main() {
 
-	if _, err := os.Stat("key.json"); os.IsNotExist(err) {
-		log.Fatalln("The file key.json couldn't be found in the dir")
-	}
-
+	// Look for the env variable and exit if they're not any
 	decryptionKey, exists := os.LookupEnv("ENEDIS_DECRYPTION_KEY")
 	if !exists {
 		log.Fatalln("The ENEDIS_DECRYPTION_KEY environment variable must be set")
@@ -196,8 +192,11 @@ func main() {
 		log.Fatalln("The ENEDIS_FTP_FOLDER environment variable must be set")
 	}
 
-	// Allow the
-	// os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", credentialsFilePath)
+	jarPath, exists := os.LookupEnv("DECRYPTER_JAR_PATH")
+	if !exists {
+		log.Fatalln("The DECRYPTER_JAR_PATH must be set")
+	}
+
 	// Create a new fsnotify watcher
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
@@ -224,7 +223,7 @@ func main() {
 				// Check if the event is a file being created
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					log.Println("File added:", event.Name)
-					corruptedZipFilePath, err := executeDecrypter(event.Name, decryptionKey)
+					corruptedZipFilePath, err := executeDecrypter(jarPath, event.Name, decryptionKey)
 					fmt.Println(corruptedZipFilePath)
 					if err != nil {
 						log.Println("Error while decrypting "+event.Name+" : ", err)
