@@ -1,5 +1,5 @@
 # enedis-watcher
-Watch over a folder linked to FTP in order to decrypt it and send it to a GCP Bucket.
+Retrieve data sent by enedis and send them on a GCP bucket
 
 # Warning
 
@@ -26,4 +26,17 @@ The followings environment variables must be set :
 ```
 # go 1.19+
 go install github.com/Cherpas/enedis-watcher@latest
+```
+
+# F.A.Q
+
+### How to set the environment variable ?
+
+You can do it through bash. Here's an example : 
+
+```bash
+export ENEDIS_DECRYPTION_KEY=<DECRYPTION_KEY>
+export GOOGLE_APPLICATION_CREDENTIALS=/home/enedis/.secrets/user.json
+export ENEDIS_FTP_FOLDER=/home/enedis/ftp_folder
+export DECRYPTER_JAR_PATH=/home/enedis/jar/Decrypt.jar
 ```
