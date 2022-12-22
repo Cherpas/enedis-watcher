@@ -1,6 +1,10 @@
 # enedis-watcher
 Retrieve data sent by enedis and send them on a GCP bucket
 
+# Context
+
+This program is designed to decrypt files that are sent by Enedis, a electricity provider in France, from an electric meter via FTP. The files contain important information about your electricity usage and are encrypted for security purposes. Our program allows you to easily decrypt these files so that you can access and analyze the data they contain.
+
 # Warning
 
 The current configuration require the use of a JAR in order to decrypt the file sent by Enedis.
