@@ -172,6 +172,7 @@ func uploadFolderContent(folderPath string,outputBucket string) error {
 		}
 	}
 
+		fmt.Println("File uploaded:", elementPath)
 	return nil
 }
 
@@ -201,6 +202,8 @@ func main() {
 	if !exists {
 		log.Fatalln("The OUTPUT_BUCKET environment variable must be set")
 	}
+
+
 
 	// Create a new fsnotify watcher
 	watcher, err := fsnotify.NewWatcher()
