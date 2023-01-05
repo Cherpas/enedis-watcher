@@ -172,7 +172,6 @@ func uploadFolderContent(folderPath string,outputBucket string) error {
 		}
 	}
 
-		fmt.Println("File uploaded:", elementPath)
 	return nil
 }
 
