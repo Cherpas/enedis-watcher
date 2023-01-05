@@ -151,7 +151,7 @@ func extractZip(zipPath string) (string, error) {
 }
 
 // Upload the content of the unzipped folder to the GCP bucket
-func uploadFolderContent(folderPath string) error {
+func uploadFolderContent(folderPath string,outputBucket string) error {
 	// Read the contents of the folder
 	contents, err := ioutil.ReadDir(folderPath)
 	if err != nil {
@@ -167,7 +167,7 @@ func uploadFolderContent(folderPath string) error {
 		}
 
 		// Execute the upload function on each element
-		if err := uploadFileToBucket("enedis_storage", "decrypted_xml", elementPath); err != nil {
+		if err := uploadFileToBucket(outputBucket, "decrypted_xml", elementPath); err != nil {
 			return err
 		}
 	}
@@ -194,7 +194,12 @@ func main() {
 
 	jarPath, exists := os.LookupEnv("DECRYPTER_JAR_PATH")
 	if !exists {
-		log.Fatalln("The DECRYPTER_JAR_PATH must be set")
+		log.Fatalln("The DECRYPTER_JAR_PATH environment variable must be set")
+	}
+
+	outputBucket, exists := os.LookupEnv("OUTPUT_BUCKET")
+	if !exists {
+		log.Fatalln("The OUTPUT_BUCKET environment variable must be set")
 	}
 
 	// Create a new fsnotify watcher
@@ -243,7 +248,7 @@ func main() {
 						continue
 					}
 
-					uploadFolderContent(folderFilePath)
+					uploadFolderContent(folderFilePath,outputBucket)
 
 					// Cleaning
 					os.Remove(event.Name)
