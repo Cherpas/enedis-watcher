@@ -264,6 +264,7 @@ func main() {
 					}
 
 					uploadFolderContent(folderFilePath,outputBucket_staging)
+					uploadFolderContent(folderFilePath,outputBucket_production)
 
 					// Cleaning
 					os.Remove(event.Name)
