@@ -42,9 +42,11 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 
 	// Copy the file contents to the object
 	if _, err := io.Copy(w, f); err != nil {
+		log.Println("io.Copy: %v", err)
 		return fmt.Errorf("io.Copy: %v", err)
 	}
 	if err := w.Close(); err != nil {
+		log.Println("Writer.Close: %v", err)
 		return fmt.Errorf("Writer.Close: %v", err)
 	}
 
