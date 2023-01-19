@@ -10,7 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-
+	"time"
 	"cloud.google.com/go/storage"
 	"github.com/fsnotify/fsnotify"
 )
@@ -239,6 +239,9 @@ func main() {
 					log.Println("File added:", event.Name)
 
 					uploadFileToBucket(outputBucket_production,"raw_enedis",event.Name)
+
+					time.Sleep(5 * time.Second)
+
 					uploadFileToBucket(outputBucket_staging,"raw_enedis",event.Name)
 
 					corruptedZipFilePath, err := executeDecrypter(jarPath, event.Name, decryptionKey)
@@ -264,6 +267,9 @@ func main() {
 					}
 
 					uploadFolderContent(folderFilePath,outputBucket_staging)
+
+					time.Sleep(5 * time.Second)
+
 					uploadFolderContent(folderFilePath,outputBucket_production)
 
 					// Cleaning
