@@ -10,7 +10,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"time"
 	"cloud.google.com/go/storage"
 	"github.com/fsnotify/fsnotify"
 )
@@ -235,8 +234,8 @@ func main() {
 				// Check if the event is a file being created
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					log.Println("File added:", event.Name)
-					log.Println("Staging bucket:", outputBucketStaging)
-					log.Println("Production bucket:", outputBucketProduction)
+					fmt.Println("Staging bucket:", outputBucketStaging)
+					fmt.Println("Production bucket:", outputBucketProduction)
 
 					uploadFileToBucket(outputBucketStaging,"raw_enedis",event.Name)
 					uploadFileToBucket(outputBucketProduction,"raw_enedis",event.Name)
