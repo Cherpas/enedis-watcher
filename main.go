@@ -201,12 +201,12 @@ func main() {
 
 	outputBucket_production, exists := os.LookupEnv("OUTPUT_BUCKET_PRODUCTION")
 	if !exists {
-		log.Fatalln("The OUTPUT_BUCKET environment variable must be set")
+		log.Fatalln("The OUTPUT_BUCKET_PRODUCTION environment variable must be set")
 	}
 
 	outputBucket_staging, exists := os.LookupEnv("OUTPUT_BUCKET_STAGING")
 	if !exists {
-		log.Fatalln("The OUTPUT_BUCKET environment variable must be set")
+		log.Fatalln("The OUTPUT_BUCKET_STAGING environment variable must be set")
 	}
 
 
@@ -237,7 +237,7 @@ func main() {
 				// Check if the event is a file being created
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					log.Println("File added:", event.Name)
-					
+
 					uploadFileToBucket(outputBucket_staging,"raw_enedis",event.Name)
 					uploadFileToBucket(outputBucket_production,"raw_enedis",event.Name)
 
@@ -264,8 +264,6 @@ func main() {
 					}
 
 					uploadFolderContent(folderFilePath,outputBucket_staging)
-
-					time.Sleep(5 * time.Second)
 
 					uploadFolderContent(folderFilePath,outputBucket_production)
 
