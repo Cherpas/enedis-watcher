@@ -175,30 +175,6 @@ func uploadFolderContent(folderPath string,outputBucket string) error {
 	return nil
 }
 
-func uploadFolderAnyway(folderPath string,outputBucket string) error {
-	// Read the contents of the folder
-	contents, err := ioutil.ReadDir(folderPath)
-	if err != nil {
-		return err
-	}
-
-	// Iterate over the elements in the folder
-	for _, element := range contents {
-		// Get the absolute path of the element
-		elementPath, err := filepath.Abs(filepath.Join(folderPath, element.Name()))
-		if err != nil {
-			return err
-		}
-
-		// Execute the upload function on each element
-		if err := uploadFileToBucket(outputBucket, "raw_enedis", elementPath); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func main() {
 
 	// Look for the env variable and exit if they're not any
@@ -255,7 +231,7 @@ func main() {
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					log.Println("File added:", event.Name)
 
-					uploadFolderAnyway(event.Name,outputBucket)
+					uploadFileToBucket("enedis_storage","raw_enedis",event.Name)
 
 					corruptedZipFilePath, err := executeDecrypter(jarPath, event.Name, decryptionKey)
 
