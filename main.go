@@ -238,11 +238,11 @@ func main() {
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					log.Println("File added:", event.Name)
 
-					uploadFileToBucket(outputBucket_production,"raw_enedis",event.Name)
+					uploadFileToBucket(outputBucket_staging,"raw_enedis",event.Name)
 
 					time.Sleep(5 * time.Second)
 
-					uploadFileToBucket(outputBucket_staging,"raw_enedis",event.Name)
+					uploadFileToBucket(outputBucket_production,"raw_enedis",event.Name)
 
 					corruptedZipFilePath, err := executeDecrypter(jarPath, event.Name, decryptionKey)
 
