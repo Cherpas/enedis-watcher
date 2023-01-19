@@ -209,9 +209,6 @@ func main() {
 		log.Fatalln("The OUTPUT_BUCKET_STAGING environment variable must be set")
 	}
 
-	log.Println(outputBucket_staging)
-	log.Println(outputBucket_production)
-
 	// Create a new fsnotify watcher
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
@@ -238,6 +235,8 @@ func main() {
 				// Check if the event is a file being created
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					log.Println("File added:", event.Name)
+					log.Println("Staging bucket:", outputBucket_staging)
+					log.Println("Production bucket:", outputBucket_production)
 
 					uploadFileToBucket(outputBucket_staging,"raw_enedis",event.Name)
 					uploadFileToBucket(outputBucket_production,"raw_enedis",event.Name)
