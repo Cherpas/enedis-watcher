@@ -209,7 +209,8 @@ func main() {
 		log.Fatalln("The OUTPUT_BUCKET_STAGING environment variable must be set")
 	}
 
-
+	log.Println(outputBucket_staging)
+	log.Println(outputBucket_production)
 
 	// Create a new fsnotify watcher
 	watcher, err := fsnotify.NewWatcher()
