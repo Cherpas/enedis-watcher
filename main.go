@@ -199,12 +199,12 @@ func main() {
 		log.Fatalln("The DECRYPTER_JAR_PATH environment variable must be set")
 	}
 
-	outputBucket_production, exists := os.LookupEnv("OUTPUT_BUCKET_PRODUCTION")
+	outputBucketProduction, exists := os.LookupEnv("OUTPUT_BUCKET_PRODUCTION")
 	if !exists {
 		log.Fatalln("The OUTPUT_BUCKET_PRODUCTION environment variable must be set")
 	}
 
-	outputBucket_staging, exists := os.LookupEnv("OUTPUT_BUCKET_STAGING")
+	outputBucketStaging, exists := os.LookupEnv("OUTPUT_BUCKET_STAGING")
 	if !exists {
 		log.Fatalln("The OUTPUT_BUCKET_STAGING environment variable must be set")
 	}
@@ -235,11 +235,11 @@ func main() {
 				// Check if the event is a file being created
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					log.Println("File added:", event.Name)
-					log.Println("Staging bucket:", outputBucket_staging)
-					log.Println("Production bucket:", outputBucket_production)
+					log.Println("Staging bucket:", outputBucketStaging)
+					log.Println("Production bucket:", outputBucketProduction)
 
-					uploadFileToBucket(outputBucket_staging,"raw_enedis",event.Name)
-					uploadFileToBucket(outputBucket_production,"raw_enedis",event.Name)
+					uploadFileToBucket(outputBucketStaging,"raw_enedis",event.Name)
+					uploadFileToBucket(outputBucketProduction,"raw_enedis",event.Name)
 
 					corruptedZipFilePath, err := executeDecrypter(jarPath, event.Name, decryptionKey)
 
@@ -263,9 +263,9 @@ func main() {
 						continue
 					}
 
-					uploadFolderContent(folderFilePath,outputBucket_staging)
+					uploadFolderContent(folderFilePath,outputBucketStaging)
 
-					uploadFolderContent(folderFilePath,outputBucket_production)
+					uploadFolderContent(folderFilePath,outputBucketProduction)
 
 					// Cleaning
 					os.Remove(event.Name)
