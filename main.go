@@ -263,7 +263,7 @@ func main() {
 					uploadFolderContent(folderFilePath,outputBucketProduction)
 
 					// Cleaning
-					os.remove(event.Name)
+					os.Remove(event.Name)
 					os.Remove(corruptedZipFilePath)
 					os.Remove(repairedZipFilePath)
 					os.RemoveAll(folderFilePath)
