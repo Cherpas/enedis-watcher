@@ -233,35 +233,28 @@ func main() {
 
 				// Check if the event is a file being created
 				if event.Op&fsnotify.Create == fsnotify.Create {
-					log.Println("File added:", event.Name)
-					fmt.Println("Staging bucket:", outputBucketStaging)
-					fmt.Println("Production bucket:", outputBucketProduction)
+					fmt.Println("File added:", event.Name)
 
 					staging := uploadFileToBucket(outputBucketStaging,"raw_enedis",event.Name)
 					production := uploadFileToBucket(outputBucketProduction,"raw_enedis",event.Name)
 
-					fmt.Println(staging)
-					fmt.Println(production)
-
 					corruptedZipFilePath, err := executeDecrypter(jarPath, event.Name, decryptionKey)
 
-					fmt.Println(corruptedZipFilePath)
-
 					if err != nil {
-						log.Println("Error while decrypting "+event.Name+" : ", err)
+						fmt.Println("Error while decrypting "+event.Name+" : ", err)
 						continue
 					}
 					repairedZipFilePath, err := repairZip(corruptedZipFilePath)
 
 					if err != nil {
-						log.Println("Error while repairing the archive "+corruptedZipFilePath+" : ", err)
+						fmt.Println("Error while repairing the archive "+corruptedZipFilePath+" : ", err)
 						continue
 					}
 
 					folderFilePath, err := extractZip(repairedZipFilePath)
 
 					if err != nil {
-						log.Println("Error while extracting the zip " + repairedZipFilePath + " : " + err.Error())
+						fmt.Println("Error while extracting the zip " + repairedZipFilePath + " : " + err.Error())
 						continue
 					}
 
