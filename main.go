@@ -237,8 +237,11 @@ func main() {
 					fmt.Println("Staging bucket:", outputBucketStaging)
 					fmt.Println("Production bucket:", outputBucketProduction)
 
-					uploadFileToBucket(outputBucketStaging,"raw_enedis",event.Name)
-					uploadFileToBucket(outputBucketProduction,"raw_enedis",event.Name)
+					staging := uploadFileToBucket(outputBucketStaging,"raw_enedis",event.Name)
+					production := uploadFileToBucket(outputBucketProduction,"raw_enedis",event.Name)
+
+					fmt.Println(staging)
+					fmt.Println(production)
 
 					corruptedZipFilePath, err := executeDecrypter(jarPath, event.Name, decryptionKey)
 
@@ -267,7 +270,6 @@ func main() {
 					uploadFolderContent(folderFilePath,outputBucketProduction)
 
 					// Cleaning
-					os.Remove(event.Name)
 					os.Remove(corruptedZipFilePath)
 					os.Remove(repairedZipFilePath)
 					os.RemoveAll(folderFilePath)
