@@ -20,12 +20,14 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	client, err := storage.NewClient(ctx)
 	defer client.Close()
 	if err != nil {
+		log.Printf("storage.NewClient: %v", err)
 		return fmt.Errorf("storage.NewClient: %v", err)
 	}
 
 	// Open the file to be uploaded
 	f, err := os.Open(filePath)
 	if err != nil {
+		log.Printf("os.Open: %v", err)
 		return fmt.Errorf("os.Open: %v", err)
 	}
 	defer f.Close()
@@ -44,10 +46,12 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 
 	// Copy the file contents to the object
 	if _, err := io.Copy(w, f); err != nil {
+		log.Printf("io.Copy: %v", err)
 		return fmt.Errorf("io.Copy: %v", err)
 	}
 
 	if err := w.Close(); err != nil {
+		log.Printf("Writer.Close: %v", err)
 		return fmt.Errorf("Writer.Close: %v", err)
 	}
 
