@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"cloud.google.com/go/storage"
 	"github.com/fsnotify/fsnotify"
-	"mime"
+	"net/http"
 )
 
 func uploadFileToBucket(bucketName, folderName, filePath string) error {
@@ -32,7 +32,7 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	defer f.Close()
 
     // Infer the content type from the file's bytes
-    contentType := mime.TypeByExtension(filepath.Ext(filePath))
+	contentType := http.DetectContentType(filePath)
 
 	// Create a bucket instance
 	bkt := client.Bucket(bucketName)
