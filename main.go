@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"cloud.google.com/go/storage"
 	"github.com/fsnotify/fsnotify"
-	"github.com/h2non/filetype"
+	"net/http"
 )
 
 func uploadFileToBucket(bucketName, folderName, filePath string) error {
@@ -29,12 +29,11 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	if err != nil {
 		return fmt.Errorf("os.Open: %v", err)
 	}
+	defer f.Close()
 
-    kind, err := filetype.MatchReader(f)
-	if err != nil {
-		return fmt.Errorf("filetype.MatchReader: %v", err)
-	}
-	contentType := kind.MIME.Value
+	contentType := http.DetectContentType(f)
+
+	fmt.Println(contentType)
 
 	// Create a bucket instance
 	bkt := client.Bucket(bucketName)
