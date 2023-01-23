@@ -17,7 +17,7 @@ import (
 
 func GetFileContentType(out *os.File) (string, error) {
 
-	// Only the first 512 bytes are used to sniff the content type.
+	// Only the first 512 bytes are used to sniff the content type
 	buffer := make([]byte, 512)
 
 	_, err := out.Read(buffer)
@@ -31,6 +31,7 @@ func GetFileContentType(out *os.File) (string, error) {
 
 	return contentType, nil
 }
+
 
 func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	// Create a client
