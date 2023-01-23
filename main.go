@@ -50,11 +50,6 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 		return fmt.Errorf("io.Copy: %v", err)
 	}
 
-	if err := w.Close(); err != nil {
-		log.Printf("Writer.Close: %v", err)
-		return fmt.Errorf("Writer.Close: %v", err)
-	}
-
 	log.Printf("File %s uploaded to bucket %s in folder %s\n", filePath, bucketName, folderName)
 	return nil
 }
