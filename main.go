@@ -36,6 +36,7 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 		return fmt.Errorf("filetype.MatchReader: %v", err)
 	}
 	contentType := kind.MIME.Value
+	fmt.Println(contentType)
 
 	// Create a bucket instance
 	bkt := client.Bucket(bucketName)
