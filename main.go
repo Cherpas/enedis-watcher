@@ -33,7 +33,7 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 
 	buffer := make([]byte, 512)
 
-	_, err := f.Read(buffer)
+	read, err := f.Read(buffer)
 	if err != nil {
 		fmt.Errorf("os.Read: %v", err)
 	}
