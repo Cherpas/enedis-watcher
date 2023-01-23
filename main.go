@@ -15,24 +15,6 @@ import (
 	"net/http"
 )
 
-func GetFileContentType(out *os.File) (string, error) {
-
-	// Only the first 512 bytes are used to sniff the content type
-	buffer := make([]byte, 512)
-
-	_, err := out.Read(buffer)
-	if err != nil {
-		return "", err
-	}
-
-	// Use the net/http package's handy DectectContentType function. Always returns a valid
-	// content-type by returning "application/octet-stream" if no others seemed to match.
-	contentType := http.DetectContentType(buffer)
-
-	return contentType, nil
-}
-
-
 func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	// Create a client
 	ctx := context.Background()
@@ -48,6 +30,17 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 		return fmt.Errorf("os.Open: %v", err)
 	}
 	defer f.Close()
+
+	buffer := make([]byte, 512)
+
+	_, err := f.Read(buffer)
+	if err != nil {
+		return "", err
+	}
+
+	contentType := http.DetectContentType(buffer)
+
+	return contentType, nil
 
 	contentType, err := GetFileContentType(f)
 
