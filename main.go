@@ -49,6 +49,8 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	}
 	defer f.Close()
 
+	contentType, err := GetFileContentType(f)
+
 	// Create a bucket instance
 	bkt := client.Bucket(bucketName)
 
