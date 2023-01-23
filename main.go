@@ -35,15 +35,10 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 
 	_, err := f.Read(buffer)
 	if err != nil {
-		return "", err
+		fmt.Errorf("os.Read: %v", err)
 	}
 
 	contentType := http.DetectContentType(buffer)
-
-	return contentType, nil
-
-	contentType, err := GetFileContentType(f)
-
 	// Create a bucket instance
 	bkt := client.Bucket(bucketName)
 
