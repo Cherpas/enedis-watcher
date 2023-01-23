@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"cloud.google.com/go/storage"
 	"github.com/fsnotify/fsnotify"
+	"net/http"
 )
 
 func uploadFileToBucket(bucketName, folderName, filePath string) error {
@@ -30,6 +31,14 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	}
 	defer f.Close()
 
+	// Read the file bytes
+    fileBytes, err := ioutil.ReadAll(f)
+    if err != nil {
+        return fmt.Errorf("ioutil.ReadAll: %v", err)
+    }
+    // Infer the content type from the file's bytes
+    contentType := http.DetectContentType(fileBytes)
+
 	// Create a bucket instance
 	bkt := client.Bucket(bucketName)
 
@@ -38,6 +47,7 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 
 	// Create a writer to the object
 	w := obj.NewWriter(ctx)
+	w.ContentType = contentType
 
 	// Copy the file contents to the object
 	if _, err := io.Copy(w, f); err != nil {
