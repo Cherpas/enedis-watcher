@@ -25,14 +25,12 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	}
 
 	// Open the file to be uploaded
-	f, err := os.Open(filePath)
+	f, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Printf("os.Open: %v", err)
 		return fmt.Errorf("os.Open: %v", err)
 	}
 	defer f.Close()
-
-	contentType := "application/octet-stream"
 
 	// Create a bucket instance
 	bkt := client.Bucket(bucketName)
@@ -42,12 +40,16 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 
 	// Create a writer to the object
 	w := obj.NewWriter(ctx)
-	w.ContentType = contentType
 
 	// Copy the file contents to the object
 	if _, err := io.Copy(w, f); err != nil {
 		log.Printf("io.Copy: %v", err)
 		return fmt.Errorf("io.Copy: %v", err)
+	}
+
+	if err := w.Close(); err != nil {
+		log.Printf("Writer.Close: %v", err)
+		return fmt.Errorf("Writer.Close: %v", err)
 	}
 
 	log.Printf("File %s uploaded to bucket %s in folder %s\n", filePath, bucketName, folderName)
