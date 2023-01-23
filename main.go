@@ -32,11 +32,6 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	}
 	defer f.Close()
 
-	data := make([]byte, 10000)
-	count, err := f.Read(data)
-
-	log.Printf(string(count))
-
 	// Create a bucket instance
 	bkt := client.Bucket(bucketName)
 
