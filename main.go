@@ -31,8 +31,8 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	}
 	defer f.Close()
 
-	contentType := http.DetectContentType(f)
-
+	contentType, err := GetFileContentType(f)
+	
 	fmt.Println(contentType)
 
 	// Create a bucket instance
