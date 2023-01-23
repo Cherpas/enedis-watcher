@@ -25,12 +25,17 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	}
 
 	// Open the file to be uploaded
-	f, err := os.ReadFile(filePath)
+	f, err := os.Open(filePath)
 	if err != nil {
 		log.Printf("os.Open: %v", err)
 		return fmt.Errorf("os.Open: %v", err)
 	}
 	defer f.Close()
+
+	data := make([]byte, 100)
+	count, err := f.Read(data)
+
+	log.Printf(data)
 
 	// Create a bucket instance
 	bkt := client.Bucket(bucketName)
