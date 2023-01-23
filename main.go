@@ -33,7 +33,7 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	defer f.Close()
 
 	data := make([]byte, 100)
-	count, err := f.Read(data)
+	count, err := f.Read(string(data))
 
 	log.Printf(data)
 
