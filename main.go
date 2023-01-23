@@ -48,8 +48,10 @@ func uploadFileToBucket(bucketName, folderName, filePath string) error {
 	w := obj.NewWriter(ctx)
 	w.ContentType = contentType
 
+	fmt.Fprintln(w, fmt.Sprintf("%s/%s", folderName, filepath.Base(filePath)))
+
 	// Copy the file contents to the object
-	if _, err := io.Write(w, f); err != nil {
+	if _, err := io.Copy(w, f); err != nil {
 		log.Println("io.Copy: %v", err)
 		return fmt.Errorf("io.Copy: %v", err)
 	}
